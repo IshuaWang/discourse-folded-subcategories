@@ -9,3 +9,17 @@ folded_subcategories_default_expanded:
   type: bool
   description:
     en: Parent categories are expanded by default when sidebar renders.
+
+folded_subcategories_indent_chars:
+  default: 1
+  type: integer
+  min: 0
+  max: 12
+  description:
+    en: Indent distance (character units) for subcategories shown under parent categories.
+
+folded_subcategories_toggle_on_parent_link_click:
+  default: false
+  type: bool
+  description:
+    en: Also toggle parent accordion when clicking parent category text link, while keeping normal navigation.

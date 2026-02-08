@@ -4,6 +4,10 @@ import {
   normalizePathname,
   toggleCollapsedState,
 } from "../lib/folded-subcategories-planner";
+import {
+  normalizeIndentChars,
+  resolveParentClickAction,
+} from "../lib/folded-subcategories-interactions";
 
 const LINK_WRAPPER_SELECTOR = ".sidebar-section-link-wrapper";
 const LINK_SELECTOR = `${LINK_WRAPPER_SELECTOR} a[href]`;
@@ -27,16 +31,6 @@ function parseCategoryId(value) {
   const normalized = String(value).replace(/^category-/, "");
   const parsed = Number.parseInt(normalized, 10);
   return Number.isInteger(parsed) ? parsed : null;
-}
-
-function isPrimaryUnmodifiedClick(event) {
-  return (
-    event.button === 0 &&
-    !event.metaKey &&
-    !event.ctrlKey &&
-    !event.shiftKey &&
-    !event.altKey
-  );
 }
 
 function getSiteCategories(api) {
@@ -70,7 +64,7 @@ function ensureCaret(anchor) {
   const caret = document.createElement("span");
   caret.className = CARET_CLASS;
   caret.setAttribute("aria-hidden", "true");
-  anchor.prepend(caret);
+  anchor.append(caret);
 }
 
 function resetSidebarClasses() {
@@ -125,6 +119,11 @@ export default apiInitializer("1.18.0", (api) => {
   let observerStarted = false;
 
   function decorateSidebar() {
+    document.documentElement.style.setProperty(
+      "--folded-subcategories-indent-size",
+      `${normalizeIndentChars(settings.folded_subcategories_indent_chars)}ch`
+    );
+
     resetSidebarClasses();
 
     if (!settings.folded_subcategories_enabled || !hasSidebarInDOM()) {
@@ -208,7 +207,7 @@ export default apiInitializer("1.18.0", (api) => {
   document.addEventListener(
     "click",
     (event) => {
-      if (!settings.folded_subcategories_enabled || !isPrimaryUnmodifiedClick(event)) {
+      if (!settings.folded_subcategories_enabled) {
         return;
       }
 
@@ -222,13 +221,23 @@ export default apiInitializer("1.18.0", (api) => {
 
       const wrapper = anchor.closest(LINK_WRAPPER_SELECTOR);
       const parentId = parseCategoryId(wrapper?.dataset?.[DATA_PARENT_ID]);
+      const clickedCaret = Boolean(event.target.closest(`.${CARET_CLASS}`));
 
-      if (!parentId) {
+      const clickAction = resolveParentClickAction({
+        event,
+        parentId,
+        clickedCaret,
+        toggleOnParentLinkClick: settings.folded_subcategories_toggle_on_parent_link_click,
+      });
+
+      if (!clickAction.shouldToggle) {
         return;
       }
 
-      event.preventDefault();
-      event.stopPropagation();
+      if (clickAction.shouldPreventNavigation) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
 
       collapsedByParentId = toggleCollapsedState(collapsedByParentId, parentId);
       scheduleDecorateSidebar();
