@@ -16,7 +16,6 @@ const CHILD_CLASS = "folded-subcategories-child";
 const COLLAPSED_CLASS = "folded-subcategories-collapsed";
 const EXPANDED_CLASS = "folded-subcategories-expanded";
 const HIDDEN_CLASS = "folded-subcategories-hidden";
-const CARET_CLASS = "folded-subcategories-caret";
 const DATA_LINK_ID = "foldedSubcategoriesLinkId";
 const DATA_PARENT_ID = "foldedSubcategoriesParentId";
 const DATA_CHILD_OF = "foldedSubcategoriesChildOf";
@@ -47,6 +46,11 @@ function getCategoryIdHint(anchor, wrapper) {
   );
 }
 
+function isUserSelectedSidebarCategory(wrapper) {
+  const listItemName = wrapper?.dataset?.listItemName;
+  return typeof listItemName === "string" && listItemName.startsWith("category-");
+}
+
 function ensureLinkId(wrapper) {
   if (!wrapper.dataset[DATA_LINK_ID]) {
     nextLinkId += 1;
@@ -54,17 +58,6 @@ function ensureLinkId(wrapper) {
   }
 
   return wrapper.dataset[DATA_LINK_ID];
-}
-
-function ensureCaret(anchor) {
-  if (!anchor || anchor.querySelector(`.${CARET_CLASS}`)) {
-    return;
-  }
-
-  const caret = document.createElement("span");
-  caret.className = CARET_CLASS;
-  caret.setAttribute("aria-hidden", "true");
-  anchor.append(caret);
 }
 
 function resetSidebarClasses() {
@@ -82,9 +75,6 @@ function resetSidebarClasses() {
 
     const anchor = wrapper.querySelector("a[href]");
     anchor?.removeAttribute("aria-expanded");
-
-    const caret = anchor?.querySelector(`.${CARET_CLASS}`);
-    caret?.remove();
   });
 }
 
@@ -103,6 +93,7 @@ function collectSidebarLinks() {
       linkId: ensureLinkId(wrapper),
       pathname: normalizePathname(anchor.getAttribute("href")),
       categoryId: getCategoryIdHint(anchor, wrapper),
+      fromUserSelection: isUserSelectedSidebarCategory(wrapper),
     });
   });
 
@@ -142,6 +133,8 @@ export default apiInitializer("1.18.0", (api) => {
       categories,
       collapsedByParentId,
       defaultExpanded: settings.folded_subcategories_default_expanded,
+      excludeSelectedChildrenFromParent:
+        settings.folded_subcategories_exclude_selected_children_from_parent,
     });
 
     collapsedByParentId = plan.collapsedByParentId;
@@ -161,7 +154,6 @@ export default apiInitializer("1.18.0", (api) => {
         wrapper.dataset[DATA_PARENT_ID] = String(parentId);
 
         anchor?.setAttribute("aria-expanded", String(!isCollapsed));
-        ensureCaret(anchor);
       }
 
       if (plan.linkToParentId[linkId]) {
@@ -211,7 +203,13 @@ export default apiInitializer("1.18.0", (api) => {
         return;
       }
 
-      const anchor = event.target.closest(
+      const clickTarget = event.target instanceof Element ? event.target : null;
+
+      if (!clickTarget) {
+        return;
+      }
+
+      const anchor = clickTarget.closest(
         `${LINK_WRAPPER_SELECTOR}.${PARENT_CLASS} > a[href]`
       );
 
@@ -221,12 +219,10 @@ export default apiInitializer("1.18.0", (api) => {
 
       const wrapper = anchor.closest(LINK_WRAPPER_SELECTOR);
       const parentId = parseCategoryId(wrapper?.dataset?.[DATA_PARENT_ID]);
-      const clickedCaret = Boolean(event.target.closest(`.${CARET_CLASS}`));
 
       const clickAction = resolveParentClickAction({
         event,
         parentId,
-        clickedCaret,
         toggleOnParentLinkClick: settings.folded_subcategories_toggle_on_parent_link_click,
       });
 

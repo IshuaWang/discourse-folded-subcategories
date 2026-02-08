@@ -18,18 +18,10 @@ function noOpClickAction() {
 export function resolveParentClickAction({
   event,
   parentId,
-  clickedCaret,
   toggleOnParentLinkClick,
 }) {
   if (!parentId || !isPrimaryUnmodifiedClick(event)) {
     return noOpClickAction();
-  }
-
-  if (clickedCaret) {
-    return {
-      shouldToggle: true,
-      shouldPreventNavigation: true,
-    };
   }
 
   if (toggleOnParentLinkClick) {
@@ -39,7 +31,10 @@ export function resolveParentClickAction({
     };
   }
 
-  return noOpClickAction();
+  return {
+    shouldToggle: true,
+    shouldPreventNavigation: true,
+  };
 }
 
 export function normalizeIndentChars(value, fallback = 1) {

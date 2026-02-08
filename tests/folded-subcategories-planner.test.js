@@ -11,6 +11,14 @@ function sidebarLink(linkId, pathname) {
   return { linkId, pathname };
 }
 
+function selectedSidebarLink(linkId, pathname) {
+  return { linkId, pathname, fromUserSelection: true };
+}
+
+function inheritedSidebarLink(linkId, pathname) {
+  return { linkId, pathname, fromUserSelection: false };
+}
+
 const categories = [
   { id: 10, parent_category_id: null, url: "/c/parent/10" },
   { id: 11, parent_category_id: 10, url: "/c/parent/child/11" },
@@ -90,6 +98,38 @@ test("buildSidebarPlan does not mark parent if child is not visible in sidebar",
 
   assert.deepEqual(result.parentLinkIds, []);
   assert.deepEqual(result.hiddenLinkIds, []);
+});
+
+test("buildSidebarPlan can exclude user-selected children from parent fold group", () => {
+  const result = buildSidebarPlan({
+    links: [
+      selectedSidebarLink("p", "/c/parent/10"),
+      selectedSidebarLink("c", "/c/parent/child/11"),
+    ],
+    categories,
+    collapsedByParentId: {},
+    defaultExpanded: false,
+    excludeSelectedChildrenFromParent: true,
+  });
+
+  assert.deepEqual(result.parentLinkIds, []);
+  assert.deepEqual(result.hiddenLinkIds, []);
+});
+
+test("buildSidebarPlan keeps non-selected children foldable in exclude-selected mode", () => {
+  const result = buildSidebarPlan({
+    links: [
+      selectedSidebarLink("p", "/c/parent/10"),
+      inheritedSidebarLink("c", "/c/parent/child/11"),
+    ],
+    categories,
+    collapsedByParentId: {},
+    defaultExpanded: false,
+    excludeSelectedChildrenFromParent: true,
+  });
+
+  assert.deepEqual(result.parentLinkIds, ["p"]);
+  assert.deepEqual(result.hiddenLinkIds, ["c"]);
 });
 
 test("toggleCollapsedState flips parent value", () => {

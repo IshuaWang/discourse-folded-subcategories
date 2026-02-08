@@ -6,7 +6,7 @@ This theme component adds accordion behavior to category links in the sidebar.
 
 - Works with user-customized sidebar category lists.
 - If a parent category and one or more of its subcategories are all visible in the sidebar, the parent becomes foldable.
-- Clicking the foldable parent caret toggles subcategory visibility (or parent text too when configured).
+- Clicking the foldable parent text toggles subcategory visibility.
 - Supports default initial state:
   - expanded
   - collapsed
@@ -22,11 +22,14 @@ This theme component adds accordion behavior to category links in the sidebar.
   - Controls child category indent in character units.
   - Default is `1` (equal to `1ch`).
 - `folded_subcategories_toggle_on_parent_link_click`:
-  - `false` (default): clicking parent text only navigates; caret toggles.
+  - `false` (default): clicking parent text toggles accordion and prevents navigation.
   - `true`: clicking parent text both toggles and navigates.
+- `folded_subcategories_exclude_selected_children_from_parent`:
+  - `false` (default): keep user-selected child categories inside the parent fold group.
+  - `true`: exclude user-selected child categories from parent fold group; parent only controls the remaining child entries.
 
 ## Behavior notes
 
-- Clicking parent category text uses normal Discourse navigation.
-- Clicking the small caret after a foldable parent label toggles accordion state.
+- Clicking parent category text always toggles accordion.
+- The arrow at the right side is visual-only.
 - Modified clicks (Ctrl/Cmd/Shift/Alt or middle-click) keep default browser behavior.

@@ -1,27 +1,37 @@
-.sidebar-section-link-wrapper.folded-subcategories-parent > a[href] .folded-subcategories-caret {
-  display: inline-block;
+.sidebar-section-link-wrapper.folded-subcategories-parent {
+  position: relative;
+}
+
+.sidebar-section-link-wrapper.folded-subcategories-parent > a[href] {
+  position: relative;
+  padding-inline-end: 1.6em;
+}
+
+.sidebar-section-link-wrapper.folded-subcategories-parent > a[href]::after {
+  content: "";
+  position: absolute;
+  inset-inline-end: 0.25em;
+  top: 50%;
   width: 0;
   height: 0;
   border-top: 0.25em solid transparent;
   border-bottom: 0.25em solid transparent;
   border-right: 0.35em solid currentColor;
-  margin-left: 0.4em;
   opacity: 0.65;
-  cursor: pointer;
   transform-origin: 50% 50%;
-  transition: transform 150ms ease;
+  transition: transform 150ms ease, opacity 150ms ease;
+  pointer-events: none;
+  transform: translateY(-50%);
 }
 
 .sidebar-section-link-wrapper.folded-subcategories-parent.folded-subcategories-expanded
-  > a[href]
-  .folded-subcategories-caret {
-  transform: rotate(-90deg);
+  > a[href]::after {
+  transform: translateY(-50%) rotate(-90deg);
 }
 
 .sidebar-section-link-wrapper.folded-subcategories-parent.folded-subcategories-collapsed
-  > a[href]
-  .folded-subcategories-caret {
-  transform: rotate(0deg);
+  > a[href]::after {
+  transform: translateY(-50%) rotate(0deg);
 }
 
 .sidebar-section-link-wrapper.folded-subcategories-hidden {

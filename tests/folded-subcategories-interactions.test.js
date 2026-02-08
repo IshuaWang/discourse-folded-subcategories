@@ -6,10 +6,9 @@ import {
   resolveParentClickAction,
 } from "../javascripts/discourse/lib/folded-subcategories-interactions.js";
 
-test("resolveParentClickAction toggles on caret click and prevents navigation", () => {
+test("resolveParentClickAction toggles on parent link click and prevents navigation by default", () => {
   const action = resolveParentClickAction({
     parentId: 10,
-    clickedCaret: true,
     toggleOnParentLinkClick: false,
     event: {
       button: 0,
@@ -26,30 +25,9 @@ test("resolveParentClickAction toggles on caret click and prevents navigation", 
   });
 });
 
-test("resolveParentClickAction keeps link click navigation by default", () => {
+test("resolveParentClickAction toggles and keeps navigation when configured", () => {
   const action = resolveParentClickAction({
     parentId: 10,
-    clickedCaret: false,
-    toggleOnParentLinkClick: false,
-    event: {
-      button: 0,
-      metaKey: false,
-      ctrlKey: false,
-      shiftKey: false,
-      altKey: false,
-    },
-  });
-
-  assert.deepEqual(action, {
-    shouldToggle: false,
-    shouldPreventNavigation: false,
-  });
-});
-
-test("resolveParentClickAction toggles on parent link click when mode is enabled", () => {
-  const action = resolveParentClickAction({
-    parentId: 10,
-    clickedCaret: false,
     toggleOnParentLinkClick: true,
     event: {
       button: 0,
@@ -69,7 +47,6 @@ test("resolveParentClickAction toggles on parent link click when mode is enabled
 test("resolveParentClickAction returns no-op for modified click", () => {
   const action = resolveParentClickAction({
     parentId: 10,
-    clickedCaret: true,
     toggleOnParentLinkClick: true,
     event: {
       button: 0,
