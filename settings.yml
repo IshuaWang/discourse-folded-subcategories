@@ -3,12 +3,14 @@ folded_subcategories_enabled:
   type: bool
   description:
     en: Enable accordion folding for parent categories in the sidebar.
+    zh_CN: 启用侧边栏父分类的手风琴折叠效果。
 
 folded_subcategories_default_expanded:
   default: true
   type: bool
   description:
     en: Parent categories are expanded by default when sidebar renders.
+    zh_CN: 侧边栏渲染时父分类默认展开。
 
 folded_subcategories_indent_chars:
   default: 1
@@ -17,9 +19,11 @@ folded_subcategories_indent_chars:
   max: 12
   description:
     en: Indent distance (character units) for subcategories shown under parent categories.
+    zh_CN: 子分类在父分类下显示时的缩进距离（字符单位）。
 
 folded_subcategories_toggle_on_parent_link_click:
   default: false
   type: bool
   description:
     en: Also toggle parent accordion when clicking parent category text link, while keeping normal navigation.
+    zh_CN: 点击父分类文字链接时也切换折叠状态，同时保留正常跳转。
