@@ -46,11 +46,6 @@ function getCategoryIdHint(anchor, wrapper) {
   );
 }
 
-function isUserSelectedSidebarCategory(wrapper) {
-  const listItemName = wrapper?.dataset?.listItemName;
-  return typeof listItemName === "string" && listItemName.startsWith("category-");
-}
-
 function ensureLinkId(wrapper) {
   if (!wrapper.dataset[DATA_LINK_ID]) {
     nextLinkId += 1;
@@ -93,7 +88,6 @@ function collectSidebarLinks() {
       linkId: ensureLinkId(wrapper),
       pathname: normalizePathname(anchor.getAttribute("href")),
       categoryId: getCategoryIdHint(anchor, wrapper),
-      fromUserSelection: isUserSelectedSidebarCategory(wrapper),
     });
   });
 
@@ -133,8 +127,6 @@ export default apiInitializer("1.18.0", (api) => {
       categories,
       collapsedByParentId,
       defaultExpanded: settings.folded_subcategories_default_expanded,
-      excludeSelectedChildrenFromParent:
-        settings.folded_subcategories_exclude_selected_children_from_parent,
     });
 
     collapsedByParentId = plan.collapsedByParentId;

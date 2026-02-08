@@ -74,7 +74,6 @@ export function buildSidebarPlan({
   categories,
   collapsedByParentId = {},
   defaultExpanded = true,
-  excludeSelectedChildrenFromParent = false,
 }) {
   const { categoryById, categoryByPath } = buildCategoryIndexes(categories);
 
@@ -95,7 +94,6 @@ export function buildSidebarPlan({
     resolvedLinks.push({
       linkId: link.linkId,
       category,
-      fromUserSelection: Boolean(link.fromUserSelection),
     });
   }
 
@@ -123,10 +121,6 @@ export function buildSidebarPlan({
     }
 
     if (!visibleCategoryIds.has(parentId) || !linkIdByCategoryId.has(parentId)) {
-      continue;
-    }
-
-    if (excludeSelectedChildrenFromParent && resolvedLink.fromUserSelection) {
       continue;
     }
 

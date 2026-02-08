@@ -24,9 +24,6 @@ This theme component adds accordion behavior to category links in the sidebar.
 - `folded_subcategories_toggle_on_parent_link_click`:
   - `false` (default): clicking parent text toggles accordion and prevents navigation.
   - `true`: clicking parent text both toggles and navigates.
-- `folded_subcategories_exclude_selected_children_from_parent`:
-  - `false` (default): keep user-selected child categories inside the parent fold group.
-  - `true`: exclude user-selected child categories from parent fold group; parent only controls the remaining child entries.
 
 ## Behavior notes
 
