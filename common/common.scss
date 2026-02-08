@@ -1,0 +1,32 @@
+.sidebar-section-link-wrapper.folded-subcategories-parent > a[href] {
+  cursor: pointer;
+}
+
+.sidebar-section-link-wrapper.folded-subcategories-parent > a[href] .folded-subcategories-caret {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-top: 0.25em solid transparent;
+  border-bottom: 0.25em solid transparent;
+  border-left: 0.35em solid currentColor;
+  margin-right: 0.4em;
+  opacity: 0.65;
+  transform-origin: 35% 50%;
+  transition: transform 150ms ease;
+}
+
+.sidebar-section-link-wrapper.folded-subcategories-parent.folded-subcategories-expanded
+  > a[href]
+  .folded-subcategories-caret {
+  transform: rotate(90deg);
+}
+
+.sidebar-section-link-wrapper.folded-subcategories-parent.folded-subcategories-collapsed
+  > a[href]
+  .folded-subcategories-caret {
+  transform: rotate(0deg);
+}
+
+.sidebar-section-link-wrapper.folded-subcategories-hidden {
+  display: none;
+}

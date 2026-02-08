@@ -1,0 +1,3 @@
+en:
+  theme_metadata:
+    description: "Adds accordion fold/unfold behavior to parent categories in the Discourse sidebar."

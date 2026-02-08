@@ -1,0 +1,8 @@
+{
+  "name": "discourse-folded-subcategories",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/folded-subcategories-planner.test.js"
+  }
+}

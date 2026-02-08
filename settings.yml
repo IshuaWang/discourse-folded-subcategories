@@ -1,0 +1,11 @@
+folded_subcategories_enabled:
+  default: true
+  type: bool
+  description:
+    en: Enable accordion folding for parent categories in the sidebar.
+
+folded_subcategories_default_expanded:
+  default: true
+  type: bool
+  description:
+    en: Parent categories are expanded by default when sidebar renders.
