@@ -38,6 +38,6 @@
   display: none;
 }
 
-.sidebar-section-link-wrapper.folded-subcategories-child > a[href] {
-  padding-inline-start: var(--folded-subcategories-indent-size, 1ch);
+.sidebar-section-link-wrapper.folded-subcategories-child {
+  margin-inline-start: var(--folded-subcategories-indent-size, 1ch);
 }

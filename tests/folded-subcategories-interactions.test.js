@@ -9,7 +9,7 @@ import {
 test("resolveParentClickAction toggles on parent link click and prevents navigation by default", () => {
   const action = resolveParentClickAction({
     parentId: 10,
-    toggleOnParentLinkClick: false,
+    isCurrentCategory: true,
     event: {
       button: 0,
       metaKey: false,
@@ -25,10 +25,10 @@ test("resolveParentClickAction toggles on parent link click and prevents navigat
   });
 });
 
-test("resolveParentClickAction toggles and keeps navigation when configured", () => {
+test("resolveParentClickAction always prevents navigation for current category click", () => {
   const action = resolveParentClickAction({
     parentId: 10,
-    toggleOnParentLinkClick: true,
+    isCurrentCategory: true,
     event: {
       button: 0,
       metaKey: false,
@@ -40,17 +40,36 @@ test("resolveParentClickAction toggles and keeps navigation when configured", ()
 
   assert.deepEqual(action, {
     shouldToggle: true,
-    shouldPreventNavigation: false,
+    shouldPreventNavigation: true,
   });
 });
 
 test("resolveParentClickAction returns no-op for modified click", () => {
   const action = resolveParentClickAction({
     parentId: 10,
-    toggleOnParentLinkClick: true,
+    isCurrentCategory: true,
     event: {
       button: 0,
       metaKey: true,
+      ctrlKey: false,
+      shiftKey: false,
+      altKey: false,
+    },
+  });
+
+  assert.deepEqual(action, {
+    shouldToggle: false,
+    shouldPreventNavigation: false,
+  });
+});
+
+test("resolveParentClickAction returns no-op when clicked parent is not current category", () => {
+  const action = resolveParentClickAction({
+    parentId: 10,
+    isCurrentCategory: false,
+    event: {
+      button: 0,
+      metaKey: false,
       ctrlKey: false,
       shiftKey: false,
       altKey: false,

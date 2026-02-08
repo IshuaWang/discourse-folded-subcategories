@@ -21,12 +21,10 @@ This theme component adds accordion behavior to category links in the sidebar.
 - `folded_subcategories_indent_chars`:
   - Controls child category indent in character units.
   - Default is `1` (equal to `1ch`).
-- `folded_subcategories_toggle_on_parent_link_click`:
-  - `false` (default): clicking parent text toggles accordion and prevents navigation.
-  - `true`: clicking parent text both toggles and navigates.
 
 ## Behavior notes
 
-- Clicking parent category text always toggles accordion.
+- Clicking a parent category from another category only navigates, it does not toggle.
+- Clicking the currently active parent category toggles accordion and stays on the same route.
 - The arrow at the right side is visual-only.
 - Modified clicks (Ctrl/Cmd/Shift/Alt or middle-click) keep default browser behavior.

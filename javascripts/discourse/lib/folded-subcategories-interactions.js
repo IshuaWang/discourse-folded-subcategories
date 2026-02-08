@@ -18,17 +18,10 @@ function noOpClickAction() {
 export function resolveParentClickAction({
   event,
   parentId,
-  toggleOnParentLinkClick,
+  isCurrentCategory,
 }) {
-  if (!parentId || !isPrimaryUnmodifiedClick(event)) {
+  if (!parentId || !isPrimaryUnmodifiedClick(event) || !isCurrentCategory) {
     return noOpClickAction();
-  }
-
-  if (toggleOnParentLinkClick) {
-    return {
-      shouldToggle: true,
-      shouldPreventNavigation: false,
-    };
   }
 
   return {

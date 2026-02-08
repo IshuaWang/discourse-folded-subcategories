@@ -20,10 +20,3 @@ folded_subcategories_indent_chars:
   description:
     en: Indent distance (character units) for subcategories shown under parent categories.
     zh_CN: 子分类在父分类下显示时的缩进距离（字符单位）。
-
-folded_subcategories_toggle_on_parent_link_click:
-  default: false
-  type: bool
-  description:
-    en: Keep normal navigation when parent category text click toggles accordion.
-    zh_CN: 父分类文字点击切换折叠时，是否保留正常跳转。

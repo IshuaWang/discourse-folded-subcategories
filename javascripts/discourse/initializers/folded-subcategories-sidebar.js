@@ -32,6 +32,16 @@ function parseCategoryId(value) {
   return Number.isInteger(parsed) ? parsed : null;
 }
 
+function extractCategoryIdFromPath(pathname) {
+  const normalizedPath = normalizePathname(pathname || "");
+  const match = normalizedPath.match(/\/c\/[^/]+(?:\/[^/]+)*\/(\d+)(?:\/|$)/);
+  return match ? parseCategoryId(match[1]) : null;
+}
+
+function getCurrentCategoryId() {
+  return extractCategoryIdFromPath(window.location.pathname);
+}
+
 function getSiteCategories(api) {
   const site = api.container.lookup("site:main");
   return site?.categories || [];
@@ -211,11 +221,12 @@ export default apiInitializer("1.18.0", (api) => {
 
       const wrapper = anchor.closest(LINK_WRAPPER_SELECTOR);
       const parentId = parseCategoryId(wrapper?.dataset?.[DATA_PARENT_ID]);
+      const isCurrentCategory = getCurrentCategoryId() === parentId;
 
       const clickAction = resolveParentClickAction({
         event,
         parentId,
-        toggleOnParentLinkClick: settings.folded_subcategories_toggle_on_parent_link_click,
+        isCurrentCategory,
       });
 
       if (!clickAction.shouldToggle) {
