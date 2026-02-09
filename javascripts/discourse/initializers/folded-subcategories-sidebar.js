@@ -9,9 +9,13 @@ import {
   resolveParentClickAction,
 } from "../lib/folded-subcategories-interactions";
 import { getRenderDecision } from "../lib/folded-subcategories-render-policy";
+import {
+  findSidebarObserverTarget,
+  isSidebarMutation,
+  LINK_SELECTOR,
+  LINK_WRAPPER_SELECTOR,
+} from "../lib/folded-subcategories-observer";
 
-const LINK_WRAPPER_SELECTOR = ".sidebar-section-link-wrapper";
-const LINK_SELECTOR = `${LINK_WRAPPER_SELECTOR} a[href]`;
 const PARENT_CLASS = "folded-subcategories-parent";
 const CHILD_CLASS = "folded-subcategories-child";
 const COLLAPSED_CLASS = "folded-subcategories-collapsed";
@@ -114,6 +118,8 @@ export default apiInitializer("1.18.0", (api) => {
   let collapsedByParentId = {};
   let refreshQueued = false;
   let observerStarted = false;
+  let sidebarObserver = null;
+  let observedTarget = null;
 
   function decorateSidebar() {
     document.documentElement.style.setProperty(
@@ -197,6 +203,25 @@ export default apiInitializer("1.18.0", (api) => {
     });
   }
 
+  function retargetSidebarObserver() {
+    if (!sidebarObserver) {
+      return;
+    }
+
+    const nextTarget = findSidebarObserverTarget(document);
+
+    if (!nextTarget || nextTarget === observedTarget) {
+      return;
+    }
+
+    sidebarObserver.disconnect();
+    sidebarObserver.observe(nextTarget, {
+      childList: true,
+      subtree: true,
+    });
+    observedTarget = nextTarget;
+  }
+
   function startSidebarObserver() {
     if (observerStarted) {
       return;
@@ -204,14 +229,16 @@ export default apiInitializer("1.18.0", (api) => {
 
     observerStarted = true;
 
-    const observer = new MutationObserver(() => {
+    sidebarObserver = new MutationObserver((mutations) => {
+      if (!mutations.some(isSidebarMutation)) {
+        return;
+      }
+
+      retargetSidebarObserver();
       scheduleDecorateSidebar();
     });
 
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-    });
+    retargetSidebarObserver();
   }
 
   document.addEventListener(
@@ -261,6 +288,9 @@ export default apiInitializer("1.18.0", (api) => {
   );
 
   startSidebarObserver();
-  api.onPageChange(() => scheduleDecorateSidebar());
+  api.onPageChange(() => {
+    retargetSidebarObserver();
+    scheduleDecorateSidebar();
+  });
   scheduleDecorateSidebar();
 });
