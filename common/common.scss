@@ -37,6 +37,8 @@
   display: none;
 }
 
-.sidebar-section-link-wrapper.folded-subcategories-child {
-  margin-inline-start: var(--folded-subcategories-indent-size, 1ch);
+.sidebar-section-link-wrapper.folded-subcategories-child,
+.sidebar-section-link-wrapper.folded-subcategories-child:hover,
+.sidebar-section-link-wrapper.folded-subcategories-child:focus-within {
+  margin-inline-start: var(--folded-subcategories-indent-size, 1ch) !important;
 }
