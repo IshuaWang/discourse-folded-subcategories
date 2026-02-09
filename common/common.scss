@@ -37,8 +37,10 @@
   display: none;
 }
 
-.sidebar-section-link-wrapper.folded-subcategories-child .sidebar-section-link,
-.sidebar-section-link-wrapper.folded-subcategories-child .sidebar-section-link:hover,
-.sidebar-section-link-wrapper.folded-subcategories-child .sidebar-section-link:focus {
-  padding-inline-start: var(--folded-subcategories-indent-size, 1.5em) !important;
+.sidebar-section-link-wrapper.folded-subcategories-child,
+.sidebar-section-link-wrapper.folded-subcategories-child:hover,
+.sidebar-section-link-wrapper.folded-subcategories-child:focus-within,
+.sidebar-section-link-wrapper.folded-subcategories-child.active,
+.sidebar-section-link-wrapper.folded-subcategories-child.is-active {
+  margin-inline-start: var(--folded-subcategories-indent-size, 1ch) !important;
 }

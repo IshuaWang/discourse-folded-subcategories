@@ -78,6 +78,7 @@ function resetSidebarClasses() {
 
     delete wrapper.dataset[DATA_PARENT_ID];
     delete wrapper.dataset[DATA_CHILD_OF];
+    wrapper.style.removeProperty("margin-inline-start");
 
     const anchor = wrapper.querySelector("a[href]");
     anchor?.removeAttribute("aria-expanded");
@@ -171,6 +172,11 @@ export default apiInitializer("1.18.0", (api) => {
       if (plan.linkToParentId[linkId]) {
         wrapper.classList.add(CHILD_CLASS);
         wrapper.dataset[DATA_CHILD_OF] = String(plan.linkToParentId[linkId]);
+        wrapper.style.setProperty(
+          "margin-inline-start",
+          "var(--folded-subcategories-indent-size, 1ch)",
+          "important"
+        );
       }
 
       if (hiddenLinkIds.has(linkId)) {
