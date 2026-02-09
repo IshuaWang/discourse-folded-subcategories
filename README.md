@@ -26,5 +26,5 @@ This theme component adds accordion behavior to category links in the sidebar.
 
 - Clicking a parent category from another category only navigates, it does not toggle.
 - Clicking the currently active parent category toggles accordion and stays on the same route.
-- The arrow at the right side is visual-only.
+- The arrow after the category label is visual-only.
 - Modified clicks (Ctrl/Cmd/Shift/Alt or middle-click) keep default browser behavior.

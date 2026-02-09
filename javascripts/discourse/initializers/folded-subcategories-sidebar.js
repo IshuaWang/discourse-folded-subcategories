@@ -8,6 +8,7 @@ import {
   normalizeIndentChars,
   resolveParentClickAction,
 } from "../lib/folded-subcategories-interactions";
+import { getRenderDecision } from "../lib/folded-subcategories-render-policy";
 
 const LINK_WRAPPER_SELECTOR = ".sidebar-section-link-wrapper";
 const LINK_SELECTOR = `${LINK_WRAPPER_SELECTOR} a[href]`;
@@ -119,18 +120,27 @@ export default apiInitializer("1.18.0", (api) => {
       `${normalizeIndentChars(settings.folded_subcategories_indent_chars)}ch`
     );
 
+    const hasSidebar = hasSidebarInDOM();
+    const categories = hasSidebar ? getSiteCategories(api) : [];
+    const sidebarLinks = hasSidebar ? collectSidebarLinks() : [];
+
+    const renderDecision = getRenderDecision({
+      enabled: settings.folded_subcategories_enabled,
+      hasSidebar,
+      categoriesCount: categories.length,
+      linksCount: sidebarLinks.length,
+    });
+
+    if (renderDecision === "clear") {
+      resetSidebarClasses();
+      return;
+    }
+
+    if (renderDecision === "skip") {
+      return;
+    }
+
     resetSidebarClasses();
-
-    if (!settings.folded_subcategories_enabled || !hasSidebarInDOM()) {
-      return;
-    }
-
-    const categories = getSiteCategories(api);
-    const sidebarLinks = collectSidebarLinks();
-
-    if (!categories.length || !sidebarLinks.length) {
-      return;
-    }
 
     const plan = buildSidebarPlan({
       links: sidebarLinks,

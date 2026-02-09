@@ -3,35 +3,34 @@
 }
 
 .sidebar-section-link-wrapper.folded-subcategories-parent > a[href] {
-  position: relative;
-  padding-inline-end: 1.6em;
+  display: inline-flex;
+  align-items: center;
 }
 
 .sidebar-section-link-wrapper.folded-subcategories-parent > a[href]::after {
   content: "";
-  position: absolute;
-  inset-inline-end: 0.25em;
-  top: 50%;
+  display: inline-block;
   width: 0;
   height: 0;
   border-top: 0.25em solid transparent;
   border-bottom: 0.25em solid transparent;
   border-right: 0.35em solid currentColor;
+  margin-inline-start: 0.35em;
   opacity: 0.65;
   transform-origin: 50% 50%;
   transition: transform 150ms ease, opacity 150ms ease;
   pointer-events: none;
-  transform: translateY(-50%);
+  transform: rotate(0deg);
 }
 
 .sidebar-section-link-wrapper.folded-subcategories-parent.folded-subcategories-expanded
   > a[href]::after {
-  transform: translateY(-50%) rotate(-90deg);
+  transform: rotate(-90deg);
 }
 
 .sidebar-section-link-wrapper.folded-subcategories-parent.folded-subcategories-collapsed
   > a[href]::after {
-  transform: translateY(-50%) rotate(0deg);
+  transform: rotate(0deg);
 }
 
 .sidebar-section-link-wrapper.folded-subcategories-hidden {
