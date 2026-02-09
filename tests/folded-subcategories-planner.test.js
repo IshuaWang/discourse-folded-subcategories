@@ -92,6 +92,55 @@ test("buildSidebarPlan does not mark parent if child is not visible in sidebar",
   assert.deepEqual(result.hiddenLinkIds, []);
 });
 
+test("buildSidebarPlan adapts when a child category is created then removed", () => {
+  const initial = buildSidebarPlan({
+    links: [sidebarLink("p", "/c/parent/10")],
+    categories,
+    collapsedByParentId: {},
+    defaultExpanded: false,
+  });
+
+  assert.deepEqual(initial.parentLinkIds, []);
+  assert.deepEqual(initial.hiddenLinkIds, []);
+
+  const afterCreate = buildSidebarPlan({
+    links: [sidebarLink("p", "/c/parent/10"), sidebarLink("c", "/c/parent/child/11")],
+    categories,
+    collapsedByParentId: initial.collapsedByParentId,
+    defaultExpanded: false,
+  });
+
+  assert.deepEqual(afterCreate.parentLinkIds, ["p"]);
+  assert.deepEqual(afterCreate.hiddenLinkIds, ["c"]);
+
+  const afterDelete = buildSidebarPlan({
+    links: [sidebarLink("p", "/c/parent/10")],
+    categories,
+    collapsedByParentId: afterCreate.collapsedByParentId,
+    defaultExpanded: false,
+  });
+
+  assert.deepEqual(afterDelete.parentLinkIds, []);
+  assert.deepEqual(afterDelete.hiddenLinkIds, []);
+});
+
+test("buildSidebarPlan ignores orphan sidebar links from deleted categories", () => {
+  const result = buildSidebarPlan({
+    links: [
+      sidebarLink("p", "/c/parent/10"),
+      sidebarLink("deleted", "/c/deleted/999"),
+      sidebarLink("c", "/c/parent/child/11"),
+    ],
+    categories,
+    collapsedByParentId: {},
+    defaultExpanded: false,
+  });
+
+  assert.deepEqual(result.parentLinkIds, ["p"]);
+  assert.deepEqual(result.hiddenLinkIds, ["c"]);
+  assert.equal(result.linkToParentId.deleted, undefined);
+});
+
 test("toggleCollapsedState flips parent value", () => {
   assert.deepEqual(toggleCollapsedState({}, 10), { 10: true });
   assert.deepEqual(toggleCollapsedState({ 10: true }, 10), { 10: false });

@@ -1,6 +1,5 @@
 export const LINK_WRAPPER_SELECTOR = ".sidebar-section-link-wrapper";
 export const LINK_SELECTOR = `${LINK_WRAPPER_SELECTOR} a[href]`;
-export const SIDEBAR_SECTION_SELECTOR = ".sidebar-section-content";
 
 function isElementNode(node) {
   return node?.nodeType === 1;
@@ -44,19 +43,4 @@ export function isSidebarMutation(mutation) {
   }
 
   return false;
-}
-
-export function findSidebarObserverTarget(doc = document) {
-  const linkWrapper = doc?.querySelector?.(LINK_WRAPPER_SELECTOR);
-
-  if (!linkWrapper) {
-    return doc?.body || null;
-  }
-
-  return (
-    linkWrapper.closest?.(SIDEBAR_SECTION_SELECTOR) ||
-    linkWrapper.parentElement ||
-    doc?.body ||
-    null
-  );
 }

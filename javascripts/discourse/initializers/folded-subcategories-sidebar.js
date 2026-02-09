@@ -10,7 +10,6 @@ import {
 } from "../lib/folded-subcategories-interactions";
 import { getRenderDecision } from "../lib/folded-subcategories-render-policy";
 import {
-  findSidebarObserverTarget,
   isSidebarMutation,
   LINK_SELECTOR,
   LINK_WRAPPER_SELECTOR,
@@ -119,7 +118,6 @@ export default apiInitializer("1.18.0", (api) => {
   let refreshQueued = false;
   let observerStarted = false;
   let sidebarObserver = null;
-  let observedTarget = null;
 
   function decorateSidebar() {
     document.documentElement.style.setProperty(
@@ -203,25 +201,6 @@ export default apiInitializer("1.18.0", (api) => {
     });
   }
 
-  function retargetSidebarObserver() {
-    if (!sidebarObserver) {
-      return;
-    }
-
-    const nextTarget = findSidebarObserverTarget(document);
-
-    if (!nextTarget || nextTarget === observedTarget) {
-      return;
-    }
-
-    sidebarObserver.disconnect();
-    sidebarObserver.observe(nextTarget, {
-      childList: true,
-      subtree: true,
-    });
-    observedTarget = nextTarget;
-  }
-
   function startSidebarObserver() {
     if (observerStarted) {
       return;
@@ -234,11 +213,13 @@ export default apiInitializer("1.18.0", (api) => {
         return;
       }
 
-      retargetSidebarObserver();
       scheduleDecorateSidebar();
     });
 
-    retargetSidebarObserver();
+    sidebarObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
   }
 
   document.addEventListener(
@@ -289,7 +270,6 @@ export default apiInitializer("1.18.0", (api) => {
 
   startSidebarObserver();
   api.onPageChange(() => {
-    retargetSidebarObserver();
     scheduleDecorateSidebar();
   });
   scheduleDecorateSidebar();
